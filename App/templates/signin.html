@@ -1,0 +1,67 @@
+<!-- signin.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Sign In</h2>
+        <form action="/submit" method="post">
+            <div class="form-group">
+                <input type="text" name="email" id="email" placeholder="Email" />
+            </div>
+            <div class="form-group">
+                <input type="password" name="pass" id="pass" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <button onclick="login">Sign in </button>
+            </div>
+        </form>
+        <div class="signup-link">
+            <span>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></span>
+        </div>
+    </div>
+    <script type="text/javascript">
+        
+        function login(){
+
+            if (($("#email").val() == "") || ($("#pass").val() == '')){
+
+                $(".error_message").text("All fields are required.");
+                $(".error_message").show(0).delay(3000).hide(0);
+            }
+            else {
+                var data = new FormData();
+                data.append('email', $("#email").val());
+                data.append('pass', $("#pass").val());
+                $.ajax({
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    url: '/submit',
+                    processData: false,
+                    cache: false,
+                    timeout: 800000,
+                    contentType: false,
+                    data: data,
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data['status'] == true){
+                            $('#login_message').text("Welcome " + data['username'] +", Login Successfully.");
+                            $('#login_message').show(0).delay(3000).hide(0);
+                        } else{
+                            $(".error_message").text("Incorrect Email and Password.");
+                            $(".error_message").show(0).delay(3000).hide(0);
+                        }
+                    } 
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>
